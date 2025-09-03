@@ -1,0 +1,23 @@
+@override
+  UserManga read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return UserManga(
+      mangaLink: fields[0] as String,
+      lastChapterRead: fields[2] == null ? 0 : (fields[2] as num).toInt(),
+      isFavorite: fields[1] == null ? false : fields[1] as bool,
+      readingStatus: fields[3] == null
+          ? ReadingStatus.notReading
+          : fields[3] as ReadingStatus,
+      lastPageReadByChapter: fields.containsKey(4) ? (fields[4] as Map).cast<int, int>() : {},
+      isReadByChapter: fields.containsKey(5) ? (fields[5] as Map).cast<int, bool>() : {},
+      downloadedImagePathsByChapter: fields.containsKey(6) ? (fields[6] as Map).map(
+              (dynamic k, dynamic v) =>
+              MapEntry((k as num).toInt(), (v as List).cast<String>())) : {},
+      chapterBookmarks: fields.containsKey(7) ? (fields[7] as Map?).cast<int, bool>() : {},
+      lastReadTimestamp: fields.containsKey(8) ? fields[8] as DateTime? : null,
+      totalReadingTimeInSeconds: fields.containsKey(9) ? fields[9] as int? : null,
+    );
+  }

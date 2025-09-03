@@ -1,0 +1,1 @@
+enum ChapterFilter { all, read, unread }
